@@ -43,8 +43,11 @@ class FirstScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   height: 300,
                   decoration: BoxDecoration(
+                      color: Colors.red,
                       image: new DecorationImage(
-                          fit: BoxFit.cover, image: AssetImage("thetre.jpg"))),
+                        image: AssetImage("thetre.jpg"),
+                        fit: BoxFit.cover,
+                      )),
                 ))
           ],
         ),
