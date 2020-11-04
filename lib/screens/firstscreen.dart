@@ -36,12 +36,16 @@ class FirstScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 )),
             Positioned(
-              top: 250,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                child: Image.asset("thetre.jpg"),
-              ),
-            )
+                top: 250,
+                width: MediaQuery.of(context).size.width,
+                height: 300,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 300,
+                  decoration: BoxDecoration(
+                      image: new DecorationImage(
+                          fit: BoxFit.cover, image: AssetImage("thetre.jpg"))),
+                ))
           ],
         ),
       ),
