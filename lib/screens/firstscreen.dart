@@ -45,9 +45,44 @@ class FirstScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Colors.red,
                       image: new DecorationImage(
-                        image: AssetImage("thetre.jpg"),
+                        image: AssetImage("images/thetre.jpg"),
                         fit: BoxFit.cover,
                       )),
+                )),
+            Positioned(
+                top: 550,
+                width: 275,
+                height: 55,
+                left: 67,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(27.0),
+                      side: BorderSide(color: kColorCyan)),
+                  onPressed: () {},
+                  color: kColorCyan,
+                  textColor: Colors.white,
+                  child: Text("Sign-In".toUpperCase(),
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold)),
+                )),
+            Positioned(
+                top: 620,
+                width: 275,
+                height: 55,
+                left: 67,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(27.0),
+                      side: BorderSide(color: kColorYellow)),
+                  onPressed: () {},
+                  color: kColorYellow,
+                  child: Text("Sign-Up".toUpperCase(),
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold)),
                 ))
           ],
         ),
