@@ -1,5 +1,7 @@
 import 'package:MovieZone/Theme.dart';
+import 'package:MovieZone/screens/MovieInfo.dart';
 import 'package:MovieZone/screens/firstscreen.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class PageNavigator extends StatefulWidget {
@@ -111,6 +113,43 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Stack(
+              children: [
+                CarouselSlider(
+                  options: CarouselOptions(
+                    height: 200,
+                    aspectRatio: 16 / 9,
+                    viewportFraction: 0.8,
+                    initialPage: 0,
+                    enableInfiniteScroll: false,
+                    reverse: false,
+                    autoPlay: true,
+                    autoPlayInterval: Duration(seconds: 3),
+                    autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    enlargeCenterPage: true,
+                    scrollDirection: Axis.horizontal,
+                  ),
+                  items: [1, 2, 3, 4, 5].map((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          // margin: EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                              image: new DecorationImage(
+                            image: NetworkImage(
+                              'https://picsum.photos/seed/imagee$i/400/300',
+                            ),
+                            fit: BoxFit.cover,
+                          )),
+                        );
+                      },
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
             Container(
               height: 90,
               padding: EdgeInsets.symmetric(
@@ -178,53 +217,62 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 itemCount: 4,
                 itemBuilder: (context, index) {
-                  return Container(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          height: 180,
-                          width: 140,
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieInfo(),
+                          ));
+                    },
+                    child: Container(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
                           child: Container(
-                            decoration: BoxDecoration(
-                              image: new DecorationImage(
-                                  fit: BoxFit.cover,
-                                  colorFilter: ColorFilter.mode(
-                                      Colors.black.withOpacity(0.9),
-                                      BlendMode.dstATop),
-                                  image: NetworkImage(
-                                    'https://picsum.photos/seed/new$index/200/300',
-                                  )),
+                            height: 180,
+                            width: 140,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                image: new DecorationImage(
+                                    fit: BoxFit.cover,
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.black.withOpacity(0.9),
+                                        BlendMode.dstATop),
+                                    image: NetworkImage(
+                                      'https://picsum.photos/seed/new$index/200/300',
+                                    )),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        width: 140,
-                        child: RichText(
-                            softWrap: true,
-                            textWidthBasis: TextWidthBasis.parent,
-                            text: TextSpan(children: [
-                              TextSpan(
-                                  text:
-                                      'The Assent of the greate chalie chapline'
-                                          .substring(0, 18),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14)),
-                              TextSpan(text: '..\n'),
-                              TextSpan(
-                                  text: '2020, Action',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 13))
-                            ])),
-                      )
-                    ],
-                  ));
+                        Container(
+                          width: 140,
+                          child: RichText(
+                              softWrap: true,
+                              textWidthBasis: TextWidthBasis.parent,
+                              text: TextSpan(children: [
+                                TextSpan(
+                                    text:
+                                        'The Assent of the greate chalie chapline'
+                                            .substring(0, 18),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
+                                TextSpan(text: '..\n'),
+                                TextSpan(
+                                    text: '2020, Action',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 13))
+                              ])),
+                        )
+                      ],
+                    )),
+                  );
                 },
               ),
             ),

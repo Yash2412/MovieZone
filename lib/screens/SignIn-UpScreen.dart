@@ -12,15 +12,21 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: true,
+        iconTheme: IconThemeData(color: Colors.white, size: 25),
+      ),
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(color: kColorBlack),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              SizedBox(height: 100),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 8),
                 child: Text(
@@ -140,15 +146,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: true,
+        iconTheme: IconThemeData(color: Colors.white, size: 25),
+      ),
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(color: kColorBlack),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              SizedBox(height: 100),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 8),
                 child: Text(

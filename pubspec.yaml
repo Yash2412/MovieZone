@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
 
   flutter_statusbarcolor: ^0.2.3
+  carousel_slider:
 
 
 

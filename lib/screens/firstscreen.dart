@@ -6,11 +6,7 @@ class FirstScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: true,
-        iconTheme: IconThemeData(color: Colors.white, size: 25),
-      ),
+      
       body: Container(
         decoration: BoxDecoration(color: kColorBlack),
         width: MediaQuery.of(context).size.width,
