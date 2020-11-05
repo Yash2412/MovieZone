@@ -2,7 +2,6 @@ import 'package:MovieZone/Theme.dart';
 import 'package:MovieZone/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
-import 'package:MovieZone/screens/firstscreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -36,7 +35,7 @@ class _MyAppState extends State<MyApp> {
         fontFamily: 'Segoe UI',
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: FirstScreen(),
+      home: PageNavigator(),
     );
   }
 }
