@@ -21,67 +21,97 @@ class _PageNavigatorState extends State<PageNavigator> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pageList[_selected],
-      floatingActionButton: Container(
-        width: MediaQuery.of(context).size.width - 80,
-        height: 60,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50), color: kColorGrey),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            IconButton(
-                icon: Icon(
-                  _selected == 0 ? Icons.home_rounded : Icons.home_outlined,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _selected = 0;
-                  });
-                }),
-            IconButton(
-                icon: Icon(
-                  _selected == 1 ? Icons.saved_search : Icons.search_outlined,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _selected = 1;
-                  });
-                }),
-            IconButton(
-                icon: Icon(
-                  _selected == 2
-                      ? Icons.favorite_rounded
-                      : Icons.favorite_border_outlined,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _selected = 2;
-                  });
-                }),
-            IconButton(
-                icon: Icon(
-                  _selected == 3
-                      ? Icons.account_circle_rounded
-                      : Icons.account_circle_outlined,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _selected = 3;
-                  });
-                }),
-          ],
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: kColorGrey,
+        currentIndex: _selected,
+        selectedItemColor: kColorCyan,
+        unselectedItemColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+        onTap: (value) {
+          setState(() {
+            _selected = value;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+              activeIcon: Icon(Icons.home_rounded)),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.search_outlined),
+              label: 'Search',
+              activeIcon: Icon(Icons.saved_search)),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.favorite_border_outlined),
+              label: 'Watchlist',
+              activeIcon: Icon(Icons.favorite_rounded)),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_outlined),
+              label: 'Profile',
+              activeIcon: Icon(Icons.account_circle_rounded)),
+        ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: Container(
+      //   width: MediaQuery.of(context).size.width - 80,
+      //   height: 60,
+      //   decoration: BoxDecoration(
+      //       borderRadius: BorderRadius.circular(50), color: kColorGrey),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //     crossAxisAlignment: CrossAxisAlignment.center,
+      //     children: [
+      //       IconButton(
+      //           icon: Icon(
+      //             _selected == 0 ? Icons.home_rounded : Icons.home_outlined,
+      //             color: Colors.white,
+      //             size: 30,
+      //           ),
+      //           onPressed: () {
+      //             setState(() {
+      //               _selected = 0;
+      //             });
+      //           }),
+      //       IconButton(
+      //           icon: Icon(
+      //             _selected == 1 ? Icons.saved_search : Icons.search_outlined,
+      //             color: Colors.white,
+      //             size: 30,
+      //           ),
+      //           onPressed: () {
+      //             setState(() {
+      //               _selected = 1;
+      //             });
+      //           }),
+      //       IconButton(
+      //           icon: Icon(
+      //             _selected == 2
+      //                 ? Icons.favorite_rounded
+      //                 : Icons.favorite_border_outlined,
+      //             color: Colors.white,
+      //             size: 30,
+      //           ),
+      //           onPressed: () {
+      //             setState(() {
+      //               _selected = 2;
+      //             });
+      //           }),
+      //       IconButton(
+      //           icon: Icon(
+      //             _selected == 3
+      //                 ? Icons.account_circle_rounded
+      //                 : Icons.account_circle_outlined,
+      //             color: Colors.white,
+      //             size: 30,
+      //           ),
+      //           onPressed: () {
+      //             setState(() {
+      //               _selected = 3;
+      //             });
+      //           }),
+      //     ],
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
@@ -413,9 +443,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            SizedBox(
-              height: 80,
-            )
+            // SizedBox(
+            //   height: 80,
+            // )
           ],
         ),
       ),
