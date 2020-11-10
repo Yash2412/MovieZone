@@ -15,9 +15,12 @@ class FirstScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              SizedBox(
+                height: 100,
+              ),
               Container(
                   child: RichText(
-                    textAlign: TextAlign.center,
+                textAlign: TextAlign.center,
                 text: TextSpan(
                   children: [
                     TextSpan(text: 'Welcome to\n'),
@@ -31,14 +34,14 @@ class FirstScreen extends StatelessWidget {
               )),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: 200,
+                height: 360,
                 decoration: BoxDecoration(
                     image: new DecorationImage(
                   image: AssetImage("images/thetre.jpg"),
                   fit: BoxFit.cover,
                 )),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 3),
               Container(
                 width: MediaQuery.of(context).size.width - 100,
                 margin: EdgeInsets.symmetric(vertical: 8),

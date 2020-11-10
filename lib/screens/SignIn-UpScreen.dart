@@ -1,3 +1,5 @@
+// ignore: avoid_web_libraries_in_flutter
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -262,12 +264,66 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 }
 
+String errorForSigup(num) {
+  if (num == 1) {
+    return "plz enter name";
+  } else if (num == 2) {
+    return "plz enter username";
+  } else if (num == 3) {
+    return "plz enter password";
+  } else if (num == 4)
+    return "plz again enter password";
+  else if (num == 5)
+    return "username alredy exist";
+  else if (num == 6)
+    return "password did not match";
+  else if (num == 7) return "user created succesfully";
+  return "server timed out";
+}
+
+class SignupObj {
+  bool issuccesful;
+  int value;
+  SignupObj({this.issuccesful, this.value});
+  factory SignupObj.fromJson(Map json) {
+    return SignupObj(issuccesful: json['issuccesful'], value: json['value']);
+  }
+}
+
+Future<SignupObj> fetchSignup(
+    String username, String password, String name) async {
+  final http.Response response = await http.post(
+    "http://10.0.2.2:3000/signup",
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'username': username,
+      'password': password,
+      'name': name,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    return SignupObj.fromJson(jsonDecode(response.body));
+  } else {
+    return SignupObj.fromJson({'issuccesful': false, 'value': 8});
+  }
+}
+
 class SignUpScreen extends StatefulWidget {
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  var name = '';
+  var username = '';
+  var password = '';
+  var confirmpassword = '';
+  var value = 0;
+  var isloading = false;
+  var iserror = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -285,7 +341,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 100),
+              SizedBox(height: 80),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 8),
                 child: Text(
@@ -320,6 +376,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   margin: EdgeInsets.symmetric(vertical: 8),
                   width: MediaQuery.of(context).size.width - 100,
                   child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        name = value;
+                      });
+                    },
                     maxLines: 1,
                     minLines: 1,
                     style: TextStyle(fontSize: 15, color: Colors.white),
@@ -340,6 +401,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   margin: EdgeInsets.symmetric(vertical: 8),
                   width: MediaQuery.of(context).size.width - 100,
                   child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        username = value;
+                      });
+                    },
                     maxLines: 1,
                     minLines: 1,
                     style: TextStyle(fontSize: 15, color: Colors.white),
@@ -347,7 +413,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                         filled: true,
-                        hintText: 'Email',
+                        hintText: 'username',
                         hintStyle: TextStyle(fontSize: 15, color: Colors.white),
                         border: new OutlineInputBorder(
                             borderRadius: const BorderRadius.all(
@@ -360,6 +426,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   margin: EdgeInsets.symmetric(vertical: 8),
                   width: MediaQuery.of(context).size.width - 100,
                   child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
                     maxLines: 1,
                     minLines: 1,
                     obscureText: true,
@@ -382,6 +453,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   margin: EdgeInsets.symmetric(vertical: 8),
                   width: MediaQuery.of(context).size.width - 100,
                   child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        confirmpassword = value;
+                      });
+                    },
                     maxLines: 1,
                     minLines: 1,
                     obscureText: true,
@@ -407,7 +483,65 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   padding: EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(27.0)),
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (name == '') {
+                      setState(() {
+                        value = 1;
+                        iserror = true;
+                      });
+                    } else if (username == '') {
+                      setState(() {
+                        value = 2;
+                        iserror = true;
+                      });
+                    } else if (password == '') {
+                      setState(() {
+                        value = 3;
+                        iserror = true;
+                      });
+                    } else if (confirmpassword == '') {
+                      setState(() {
+                        value = 4;
+                        iserror = true;
+                      });
+                    } else if (confirmpassword != password) {
+                      setState(() {
+                        value = 6;
+                        iserror = true;
+                      });
+                    } else {
+                      setState(() {
+                        isloading = true;
+                        iserror = false;
+                      });
+                      var temp = await fetchSignup(username, password, name)
+                          .timeout(const Duration(seconds: 8), onTimeout: () {
+                        return SignupObj.fromJson(
+                            {'issuccesful': false, 'value': 8});
+                      });
+                      if (temp.value == 8) {
+                        setState(() {
+                          isloading = false;
+                          iserror = true;
+                          value = 8;
+                        });
+                      } else {
+                        if (temp.issuccesful) {
+                          setState(() {
+                            isloading = false;
+                            iserror = true;
+                            value = 7;
+                          });
+                        } else {
+                          setState(() {
+                            isloading = false;
+                            iserror = true;
+                            value = 5;
+                          });
+                        }
+                      }
+                    }
+                  },
                   color: kColorYellow,
                   textColor: Colors.white,
                   child: Text("Sign in",
@@ -417,19 +551,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           fontWeight: FontWeight.bold)),
                 ),
               ),
-              // Container(
-              //   width: MediaQuery.of(context).size.width - 100,
-              //   margin: EdgeInsets.symmetric(vertical: 8),
-              //   child: FlatButton(
-              //     onPressed: () {},
-              //     textColor: Colors.white,
-              //     child: Text("Forgot password?",
-              //         style: TextStyle(
-              //             fontSize: 16,
-              //             color: kColorYellow,
-              //             fontWeight: FontWeight.bold)),
-              //   ),
-              // ),
+              Visibility(
+                  visible: iserror,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width - 100,
+                    height: 50,
+                    child: Center(
+                      child: Text(errorForSigup(value),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: kColorCyan,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  )),
+              Visibility(
+                  visible: isloading,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        image: new DecorationImage(
+                      image: AssetImage("images/loading5.gif"),
+                      fit: BoxFit.cover,
+                    )),
+                  ))
             ],
           ),
         ),
