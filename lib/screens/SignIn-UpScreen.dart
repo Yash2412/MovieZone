@@ -1,14 +1,64 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 import '../Theme.dart';
+import 'dart:async';
+import 'dart:convert';
 
 class SignInScreen extends StatefulWidget {
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
 
+String errorForSigin(num) {
+  if (num == 1) {
+    return "plz enter username";
+  } else if (num == 2) {
+    return "plz enter password";
+  } else if (num == 3) {
+    return "server timed out";
+  } else if (num == 4)
+    return "values are correct";
+  else
+    return "enter correct details";
+}
+
+class SigninObj {
+  bool iscorrect;
+  int value;
+  SigninObj({this.iscorrect, this.value});
+  factory SigninObj.fromJson(Map json) {
+    return SigninObj(iscorrect: json['isCorrectData'], value: json['value']);
+  }
+}
+
+Future<SigninObj> fetchSignin(String username, String password) async {
+  final http.Response response = await http.post(
+    "http://10.0.2.2:3000/signin",
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'username': username,
+      'password': password,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    return SigninObj.fromJson(jsonDecode(response.body));
+  } else {
+    return SigninObj.fromJson({'isCorrectData': false, 'value': 3});
+  }
+}
+
 class _SignInScreenState extends State<SignInScreen> {
+  String username = '';
+  String password = '';
+  int value = 0;
+  bool iserror = false;
+  bool isloading = false;
+  bool iscorrect = false;
+  int newvalue = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +111,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   margin: EdgeInsets.symmetric(vertical: 8),
                   width: MediaQuery.of(context).size.width - 100,
                   child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        username = value;
+                      });
+                    },
                     maxLines: 1,
                     minLines: 1,
                     style: TextStyle(fontSize: 16, color: Colors.white),
@@ -68,7 +123,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 12, horizontal: 15),
                         filled: true,
-                        hintText: 'Email',
+                        hintText: 'username',
                         hintStyle: TextStyle(fontSize: 16, color: Colors.white),
                         border: new OutlineInputBorder(
                             borderRadius: const BorderRadius.all(
@@ -81,6 +136,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   margin: EdgeInsets.symmetric(vertical: 8),
                   width: MediaQuery.of(context).size.width - 100,
                   child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
                     maxLines: 1,
                     minLines: 1,
                     obscureText: true,
@@ -106,7 +166,50 @@ class _SignInScreenState extends State<SignInScreen> {
                   padding: EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(27.0)),
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (username == '')
+                      setState(() {
+                        iserror = true;
+                        value = 1;
+                      });
+                    else if (password == '')
+                      setState(() {
+                        iserror = true;
+                        value = 2;
+                      });
+                    else {
+                      setState(() {
+                        isloading = true;
+                        iserror = false;
+                      });
+                      var temp = await fetchSignin(username, password)
+                          .timeout(const Duration(seconds: 8), onTimeout: () {
+                        return SigninObj.fromJson(
+                            {'isCorrectData': false, 'value': 3});
+                      });
+                      if (temp.value == 3) {
+                        setState(() {
+                          iserror = true;
+                          isloading = false;
+                          value = 3;
+                        });
+                      } else {
+                        if (temp.iscorrect) {
+                          setState(() {
+                            iserror = true;
+                            isloading = false;
+                            value = 4;
+                          });
+                        } else {
+                          setState(() {
+                            iserror = true;
+                            isloading = false;
+                            value = 5;
+                          });
+                        }
+                      }
+                    }
+                  },
                   color: kColorCyan,
                   textColor: Colors.white,
                   child: Text("Sign in",
@@ -118,7 +221,6 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width - 100,
-                margin: EdgeInsets.symmetric(vertical: 8),
                 child: FlatButton(
                   onPressed: () {},
                   textColor: Colors.white,
@@ -129,6 +231,29 @@ class _SignInScreenState extends State<SignInScreen> {
                           fontWeight: FontWeight.bold)),
                 ),
               ),
+              Visibility(
+                  visible: iserror,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width - 100,
+                    child: Center(
+                      child: Text(errorForSigin(value),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: kColorYellow,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  )),
+              Visibility(
+                  visible: isloading,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        image: new DecorationImage(
+                      image: AssetImage("images/loading5.gif"),
+                      fit: BoxFit.cover,
+                    )),
+                  ))
             ],
           ),
         ),
@@ -175,21 +300,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   margin: EdgeInsets.symmetric(vertical: 8),
                   child: RichText(
                     text: TextSpan(children: [
-                      TextSpan(
-                          text: 'Already having an account?',
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: ' Sign in',
-                                style:
-                                    TextStyle(color: kColorCyan, fontSize: 16),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pushReplacement(
+                      TextSpan(text: 'Already having an account?', children: <
+                          TextSpan>[
+                        TextSpan(
+                            text: ' Sign in',
+                            style: TextStyle(color: kColorCyan, fontSize: 16),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => SignInScreen()));
-                                  })
-                          ])
+                              })
+                      ])
                     ]),
                   )),
               SizedBox(height: 15),
