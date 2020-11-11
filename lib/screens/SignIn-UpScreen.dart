@@ -8,8 +8,11 @@ import 'dart:async';
 import 'dart:convert';
 
 class SignInScreen extends StatefulWidget {
+  final updateParentState;
+  SignInScreen({this.updateParentState});
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _SignInScreenState createState() =>
+      _SignInScreenState(updateParentState: updateParentState);
 }
 
 String errorForSigin(num) {
@@ -61,6 +64,8 @@ class _SignInScreenState extends State<SignInScreen> {
   bool isloading = false;
   bool iscorrect = false;
   int newvalue = 0;
+  var updateParentState;
+  _SignInScreenState({this.updateParentState});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,10 +105,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             style: TextStyle(color: kColorYellow, fontSize: 16),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SignUpScreen()));
+                                updateParentState(2);
                               })
                       ])
                     ]),
@@ -202,6 +204,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             isloading = false;
                             value = 4;
                           });
+                          updateParentState(3);
                         } else {
                           setState(() {
                             iserror = true;
@@ -312,8 +315,11 @@ Future<SignupObj> fetchSignup(
 }
 
 class SignUpScreen extends StatefulWidget {
+  final updateParentState;
+  SignUpScreen({this.updateParentState});
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _SignUpScreenState createState() =>
+      _SignUpScreenState(updateParentState: this.updateParentState);
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
@@ -324,6 +330,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var value = 0;
   var isloading = false;
   var iserror = false;
+  var updateParentState;
+  _SignUpScreenState({this.updateParentState});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -356,19 +364,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   margin: EdgeInsets.symmetric(vertical: 8),
                   child: RichText(
                     text: TextSpan(children: [
-                      TextSpan(text: 'Already having an account?', children: <
-                          TextSpan>[
-                        TextSpan(
-                            text: ' Sign in',
-                            style: TextStyle(color: kColorCyan, fontSize: 16),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SignInScreen()));
-                              })
-                      ])
+                      TextSpan(
+                          text: 'Already having an account?',
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: ' Sign in',
+                                style:
+                                    TextStyle(color: kColorCyan, fontSize: 16),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    updateParentState(1);
+                                  })
+                          ])
                     ]),
                   )),
               SizedBox(height: 15),
@@ -544,7 +551,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   color: kColorYellow,
                   textColor: Colors.white,
-                  child: Text("Sign in",
+                  child: Text("Sign up",
                       style: TextStyle(
                           fontSize: 20,
                           color: Colors.black,

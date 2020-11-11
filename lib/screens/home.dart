@@ -1,6 +1,8 @@
 import 'package:MovieZone/Theme.dart';
 import 'package:MovieZone/screens/MovieInfo.dart';
 import 'package:MovieZone/screens/firstscreen.dart';
+import 'SignIn-UpScreen.dart';
+import 'Profile.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -10,17 +12,38 @@ class PageNavigator extends StatefulWidget {
 }
 
 class _PageNavigatorState extends State<PageNavigator> {
-  List<Widget> _pageList = [
-    HomeScreen(),
-    HomeScreen(),
-    HomeScreen(),
-    FirstScreen()
-  ];
   var _selected = 0;
+  var _selected2 = 0;
+  setSelectFromChild(n) {
+    setState(() {
+      _selected = 3;
+      _selected2 = n;
+    });
+  }
+
+  selct() {
+    if (_selected == 0)
+      return HomeScreen();
+    else if (_selected == 1)
+      return HomeScreen();
+    else if (_selected == 2)
+      return HomeScreen();
+    else {
+      if (_selected2 == 0) {
+        return FirstScreen(updateParentState: setSelectFromChild);
+      } else if (_selected2 == 1) {
+        return SignInScreen(updateParentState: setSelectFromChild);
+      } else if (_selected2 == 2)
+        return SignUpScreen(updateParentState: setSelectFromChild);
+      else
+        return Profile(updateParentState: setSelectFromChild);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pageList[_selected],
+      body: selct(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: kColorGrey,
         currentIndex: _selected,
@@ -51,67 +74,6 @@ class _PageNavigatorState extends State<PageNavigator> {
               activeIcon: Icon(Icons.account_circle_rounded)),
         ],
       ),
-      // floatingActionButton: Container(
-      //   width: MediaQuery.of(context).size.width - 80,
-      //   height: 60,
-      //   decoration: BoxDecoration(
-      //       borderRadius: BorderRadius.circular(50), color: kColorGrey),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //     crossAxisAlignment: CrossAxisAlignment.center,
-      //     children: [
-      //       IconButton(
-      //           icon: Icon(
-      //             _selected == 0 ? Icons.home_rounded : Icons.home_outlined,
-      //             color: Colors.white,
-      //             size: 30,
-      //           ),
-      //           onPressed: () {
-      //             setState(() {
-      //               _selected = 0;
-      //             });
-      //           }),
-      //       IconButton(
-      //           icon: Icon(
-      //             _selected == 1 ? Icons.saved_search : Icons.search_outlined,
-      //             color: Colors.white,
-      //             size: 30,
-      //           ),
-      //           onPressed: () {
-      //             setState(() {
-      //               _selected = 1;
-      //             });
-      //           }),
-      //       IconButton(
-      //           icon: Icon(
-      //             _selected == 2
-      //                 ? Icons.favorite_rounded
-      //                 : Icons.favorite_border_outlined,
-      //             color: Colors.white,
-      //             size: 30,
-      //           ),
-      //           onPressed: () {
-      //             setState(() {
-      //               _selected = 2;
-      //             });
-      //           }),
-      //       IconButton(
-      //           icon: Icon(
-      //             _selected == 3
-      //                 ? Icons.account_circle_rounded
-      //                 : Icons.account_circle_outlined,
-      //             color: Colors.white,
-      //             size: 30,
-      //           ),
-      //           onPressed: () {
-      //             setState(() {
-      //               _selected = 3;
-      //             });
-      //           }),
-      //     ],
-      //   ),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
